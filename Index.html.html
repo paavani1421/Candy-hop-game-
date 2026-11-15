@@ -1,0 +1,853 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>CANDY HOP!</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body {
+    margin: 10px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+/* WELCOME PAGE */
+
+#welcome {
+    background-color: pink;
+    min-height: 95vh;
+    padding: 15px;
+}
+
+#welcome h1 {
+    color: lightyellow;
+}
+
+#welcome p {
+    color: lightyellow;
+    font-size: 30px;
+}
+
+#welcome li {
+    color: lightyellow;
+    font-size: 25px;
+    margin: 12px;
+}
+
+#startImage {
+    width: 200px;
+    cursor: pointer;
+}
+
+/* CHARACTER SELECTION */
+
+#selection {
+    display: none;
+    background-color: lightblue;
+    min-height: 95vh;
+    padding: 15px;
+}
+
+#selection h1 {
+    color: darkcyan;
+}
+
+.characterChoice {
+    width: 200px;
+    height: 150px;
+    object-fit: contain;
+    margin: 15px;
+    cursor: pointer;
+}
+
+/* CHARACTER PROFILE */
+
+#profile {
+    display: none;
+    background-color: lightblue;
+    min-height: 95vh;
+    padding: 15px;
+}
+
+#profile h1 {
+    color: darkcyan;
+}
+
+#profile p {
+    color: darkcyan;
+    font-size: 30px;
+}
+
+#profilePic {
+    width: 300px;
+    height: 210px;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+/* GAME */
+
+#game {
+    display: none;
+    background: #eadfff;
+    min-height: 95vh;
+    padding: 10px;
+}
+
+#game h1 {
+    color: #7545a8;
+}
+
+#board {
+    display: grid;
+    gap: 5px;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+.block {
+    width: 55px;
+    height: 55px;
+    background-image: url("trampoline.PNG");
+    background-size: 100% 100%;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.block img {
+    width: 43px;
+    height: 43px;
+    object-fit: contain;
+}
+
+.player img {
+    animation: bounce 0.5s infinite alternate;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-9px);
+    }
+}
+
+.gone {
+    background-image: none;
+}
+
+button {
+    background: #b99be8;
+    border: 2px solid purple;
+    border-radius: 5px;
+    padding: 12px 22px;
+    font-size: 17px;
+    margin: 4px;
+    cursor: pointer;
+}
+
+#winScreen,
+#loseScreen {
+    display: none;
+    background: #eadfff;
+    min-height: 95vh;
+    padding: 15px;
+}
+
+#winScreen img {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- WELCOME PAGE -->
+
+<div id="welcome">
+
+    <h1>Welcome to CANDY HOP!</h1>
+
+    <p>Instructions:</p>
+
+    <ul style="list-style-type:none; padding-left:0;">
+
+        <li>Choose your character. 2 new characters are unlocked at each level.</li>
+
+        <li>Press start game to spawn into level one.</li>
+
+        <li>Your goal is to get to the glowing trampoline.</li>
+
+        <li>Make sure to collect the candies to get 20 points to unlock the next level.</li>
+
+        <li>But be careful! The trampolines will collapse if you're on them for too long cause you're a freaking fattie (love you tho).</li>
+
+        <li>Have fun!!!</li>
+
+    </ul>
+
+    <img
+        id="startImage"
+        src="Button.JPG"
+        alt="Start game"
+        onclick="showSelection()"
+    >
+
+</div>
+
+
+<!-- CHARACTER SELECTION -->
+
+<div id="selection">
+
+    <h1>CHOOSE YOUR CHARACTER!</h1>
+
+    <img
+        class="characterChoice"
+        src="NICO.PNG"
+        alt="Nico"
+        onclick="chooseCharacter('NICO')"
+    >
+
+    <img
+        class="characterChoice"
+        src="EMMA.PNG"
+        alt="Emma"
+        onclick="chooseCharacter('EMMA')"
+    >
+
+</div>
+
+
+<!-- CHARACTER PROFILE -->
+
+<div id="profile">
+
+    <h1>Character Profile</h1>
+
+    <p id="characterDescription"></p>
+
+    <p><b><em>CLICK ON PIC TO GO TO LEVEL 1</em></b></p>
+
+    <img
+        id="profilePic"
+        onclick="beginGame()"
+        alt="Selected character"
+    >
+
+</div>
+
+
+<!-- GAME PAGE -->
+
+<div id="game">
+
+    <h1>Candy Bounce</h1>
+
+    <h2>Level <span id="level">1</span></h2>
+
+    <h2>Time: <span id="timer">30</span></h2>
+
+    <h2 id="countdown">3</h2>
+
+    <p id="score">Candies: 0/5</p>
+
+    <div id="board"></div>
+
+    <br>
+
+    <button onclick="move('up')">UP</button>
+
+    <br>
+
+    <button onclick="move('left')">LEFT</button>
+
+    <button onclick="move('down')">DOWN</button>
+
+    <button onclick="move('right')">RIGHT</button>
+
+    <p id="message">Get ready!</p>
+
+</div>
+
+
+<!-- WIN SCREEN -->
+
+<div id="winScreen">
+
+    <h1 id="winTitle">YOU WON!</h1>
+
+    <img id="winImage" alt="You won">
+
+    <h2 id="finalScore"></h2>
+
+    <button id="nextButton" onclick="nextLevel()">
+        NEXT LEVEL
+    </button>
+
+</div>
+
+
+<!-- LOSE SCREEN -->
+
+<div id="loseScreen">
+
+    <h1>YOU LOST!</h1>
+
+    <h2 id="loseMessage">Your trampoline disappeared!</h2>
+
+    <button onclick="tryAgain()">TRY AGAIN</button>
+
+</div>
+
+
+<script>
+
+/* CHARACTER INFORMATION */
+
+let chosenCharacter = "";
+
+let playerImage = "";
+let victoryImage = "";
+
+function showSelection() {
+
+    document.getElementById("welcome").style.display = "none";
+
+    document.getElementById("selection").style.display = "block";
+
+}
+
+
+function chooseCharacter(character) {
+
+    chosenCharacter = character;
+
+    if (character == "NICO") {
+
+        document.getElementById("characterDescription").innerHTML =
+        "This is Nico, he is a gorgeous. He loves tacos, pizza and trampolines (see where im getting). He is really awesome, hope you like playing with him as your character!!";
+
+        document.getElementById("profilePic").src = "NICO.PNG";
+
+        playerImage = "NICO AS STICKER.png";
+
+        victoryImage = "CELEBRATORY NUCO.png";
+
+    }
+
+    else {
+
+        document.getElementById("characterDescription").innerHTML =
+        "This is Emma, she loves painting, dancing, and jumping on trampolines (see the pattern? No?? well too bad, stoopid). I hope you love playing with her as your avatar!!";
+
+        document.getElementById("profilePic").src = "EMMA.PNG";
+
+        playerImage = "EMMAHEHE.png";
+
+        victoryImage = "EMMAYIPPEE.png";
+
+    }
+
+    document.getElementById("selection").style.display = "none";
+
+    document.getElementById("profile").style.display = "block";
+
+}
+
+
+function beginGame() {
+
+    document.getElementById("profile").style.display = "none";
+
+    document.getElementById("game").style.display = "block";
+
+    level = 1;
+
+    resetGame();
+
+}
+
+
+/* GAME VARIABLES */
+
+let player = 12;
+
+let candies = [];
+
+let collected = [];
+
+let collapsed = [];
+
+let level = 1;
+
+let rows = 5;
+
+let columns = 5;
+
+let finish = 24;
+
+let time = 30;
+
+let started = false;
+
+let stayTimer;
+
+let gameTimer;
+
+let countdownTimer;
+
+
+/* LEVEL SETUP */
+
+function setupLevel() {
+
+    if (level == 1) {
+
+        rows = 5;
+        columns = 5;
+        player = 12;
+
+    }
+
+    else if (level == 2) {
+
+        rows = 4;
+        columns = 8;
+        player = 12;
+
+    }
+
+    else if (level == 3) {
+
+        rows = 5;
+        columns = 11;
+        player = 27;
+
+    }
+
+    randomisePositions();
+
+}
+
+
+/* RANDOMISE POSITIONS */
+
+function randomisePositions() {
+
+    let totalBlocks = rows * columns;
+
+    let available = [];
+
+    for (let i = 0; i < totalBlocks; i++) {
+
+        if (i != player) {
+
+            available.push(i);
+
+        }
+
+    }
+
+    // Randomise glowing trampoline
+
+    let finishPosition = Math.floor(
+        Math.random() * available.length
+    );
+
+    finish = available.splice(finishPosition, 1)[0];
+
+    // Randomise five candies
+
+    candies = [];
+
+    for (let i = 0; i < 5; i++) {
+
+        let randomPosition = Math.floor(
+            Math.random() * available.length
+        );
+
+        candies.push(
+            available.splice(randomPosition, 1)[0]
+        );
+
+    }
+
+}
+
+
+/* CREATE GAME BOARD */
+
+function makeBoard() {
+
+    let board = document.getElementById("board");
+
+    board.innerHTML = "";
+
+    board.style.gridTemplateColumns =
+        "repeat(" + columns + ", 55px)";
+
+    for (let i = 0; i < rows * columns; i++) {
+
+        let block = document.createElement("div");
+
+        block.className = "block";
+
+        if (collapsed.includes(i)) {
+
+            block.className = "block gone";
+
+        }
+
+        else if (i == player) {
+
+            block.className = "block player";
+
+            block.innerHTML =
+                '<img src="' + playerImage + '" alt="Player">';
+
+        }
+
+        else if (i == finish) {
+
+            block.style.backgroundImage =
+                'url("Glowing thingy.png")';
+
+        }
+
+        else if (candies.includes(i) && !collected.includes(i)) {
+
+            let candyImage;
+
+            if (level == 1) {
+
+                candyImage = "Candy.PNG";
+
+            }
+
+            else if (level == 2) {
+
+                candyImage = "Candy 2.PNG";
+
+            }
+
+            else {
+
+                candyImage = "Candy 3.PNG";
+
+            }
+
+            block.innerHTML =
+                '<img src="' + candyImage + '" alt="Candy">';
+
+        }
+
+        board.appendChild(block);
+
+    }
+
+    document.getElementById("score").innerHTML =
+        "Candies: " + collected.length + "/5";
+
+}
+
+
+/* COLLAPSING TRAMPOLINES */
+
+function collapseBlock() {
+
+    let spot = player;
+
+    stayTimer = setTimeout(function() {
+
+        if (player == spot && started) {
+
+            collapsed.push(spot);
+
+            makeBoard();
+
+            loseGame("Your trampoline disappeared!");
+
+        }
+
+    }, 1700);
+
+}
+
+
+/* LOSE GAME */
+
+function loseGame(message) {
+
+    started = false;
+
+    clearTimeout(stayTimer);
+
+    clearInterval(gameTimer);
+
+    clearInterval(countdownTimer);
+
+    document.getElementById("game").style.display = "none";
+
+    document.getElementById("winScreen").style.display = "none";
+
+    document.getElementById("loseScreen").style.display = "block";
+
+    document.getElementById("loseMessage").innerHTML = message;
+
+}
+
+
+/* WIN GAME */
+
+function winGame() {
+
+    started = false;
+
+    clearTimeout(stayTimer);
+
+    clearInterval(gameTimer);
+
+    document.getElementById("game").style.display = "none";
+
+    document.getElementById("winScreen").style.display = "block";
+
+    document.getElementById("winImage").src = victoryImage;
+
+    document.getElementById("finalScore").innerHTML =
+        "You collected " + collected.length + " candies!";
+
+    if (level == 3) {
+
+        document.getElementById("winTitle").innerHTML =
+            "YOU COMPLETED ALL LEVELS!";
+
+        document.getElementById("nextButton").style.display =
+            "none";
+
+    }
+
+    else {
+
+        document.getElementById("winTitle").innerHTML =
+            "YOU WON!";
+
+        document.getElementById("nextButton").style.display =
+            "inline-block";
+
+    }
+
+}
+
+
+/* PLAYER MOVEMENT */
+
+function move(direction) {
+
+    if (!started) return;
+
+    let next = player;
+
+    if (direction == "up") {
+
+        next -= columns;
+
+    }
+
+    if (direction == "down") {
+
+        next += columns;
+
+    }
+
+    if (direction == "left") {
+
+        if (player % columns == 0) return;
+
+        next--;
+
+    }
+
+    if (direction == "right") {
+
+        if (player % columns == columns - 1) return;
+
+        next++;
+
+    }
+
+    if (next < 0 || next >= rows * columns) return;
+
+    if (collapsed.includes(next)) return;
+
+    if (next == finish && collected.length < 5) {
+
+        document.getElementById("message").innerHTML =
+            "Collect all the candies first!";
+
+        return;
+
+    }
+
+    clearTimeout(stayTimer);
+
+    player = next;
+
+    if (candies.includes(player) &&
+        !collected.includes(player)) {
+
+        collected.push(player);
+
+    }
+
+    if (player == finish) {
+
+        winGame();
+
+        return;
+
+    }
+
+    document.getElementById("message").innerHTML =
+        "Keep collecting candies!";
+
+    makeBoard();
+
+    collapseBlock();
+
+}
+
+
+/* COUNTDOWN */
+
+function startGame() {
+
+    let count = 3;
+
+    document.getElementById("countdown").innerHTML = count;
+
+    countdownTimer = setInterval(function() {
+
+        count--;
+
+        if (count > 0) {
+
+            document.getElementById("countdown").innerHTML =
+                count;
+
+        }
+
+        else {
+
+            clearInterval(countdownTimer);
+
+            document.getElementById("countdown").innerHTML =
+                "GO!";
+
+            started = true;
+
+            document.getElementById("message").innerHTML =
+                "Collect all the candies!";
+
+            collapseBlock();
+
+            gameTimer = setInterval(function() {
+
+                time--;
+
+                document.getElementById("timer").innerHTML =
+                    time;
+
+                if (time <= 0) {
+
+                    loseGame("You ran out of time!");
+
+                }
+
+            }, 1000);
+
+        }
+
+    }, 1000);
+
+}
+
+
+/* RESET GAME */
+
+function resetGame() {
+
+    clearTimeout(stayTimer);
+
+    clearInterval(gameTimer);
+
+    clearInterval(countdownTimer);
+
+    setupLevel();
+
+    collected = [];
+
+    collapsed = [];
+
+    time = 30 - ((level - 1) * 5);
+
+    started = false;
+
+    document.getElementById("timer").innerHTML = time;
+
+    document.getElementById("countdown").innerHTML = "3";
+
+    document.getElementById("level").innerHTML = level;
+
+    document.getElementById("game").style.display = "block";
+
+    document.getElementById("winScreen").style.display = "none";
+
+    document.getElementById("loseScreen").style.display = "none";
+
+    document.getElementById("message").innerHTML = "Get ready!";
+
+    makeBoard();
+
+    startGame();
+
+}
+
+
+/* TRY AGAIN */
+
+function tryAgain() {
+
+    resetGame();
+
+}
+
+
+/* NEXT LEVEL */
+
+function nextLevel() {
+
+    if (level < 3) {
+
+        level++;
+
+        resetGame();
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
